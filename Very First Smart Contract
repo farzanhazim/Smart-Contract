@@ -1,0 +1,11 @@
+pragma solidity ^0.7.5;
+
+contract HelloWorld {
+
+    string message = "Hello To All Members";
+
+    function hello() public view returns(string memory){
+        return message;
+        
+    }
+}

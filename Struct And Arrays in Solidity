@@ -1,0 +1,24 @@
+pragma solidity ^0.8.0;
+
+contract Team {
+
+    Player [] public players;
+
+    struct Player {
+        string  firstName;
+        string  lastName;
+        uint  number;
+    }
+
+    function Size () public view returns (uint) {
+         return players.length;
+    }
+
+    function addplayer (string memory _firstName, string memory _lastName, uint _number) public {
+        players.push(Player(_firstName,_lastName,_number));
+    }
+
+    function remove (uint index) public {
+        delete players [index];
+    }
+}

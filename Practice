@@ -1,0 +1,34 @@
+pragma solidity ^0.7.5;
+
+contract HelloWorld{
+    string message;
+
+    constructor (string memory _message){
+        message = _message;
+    }
+    function get ()public view returns (string memory) {
+        return message;
+    }
+
+      int public count;
+    function increment () public {
+        count += 1;
+    }
+    function decrement () public {
+        count -= 1;
+    }
+    function multiply () public {
+        count *= 2;
+    }
+    function divide () public {
+        count /= 2;
+    }
+    function reset () public {
+        count *= 0;
+    }
+
+    function getdeployeraccount () public view returns (address) {
+        address account;
+        return account = msg.sender;
+    }
+}

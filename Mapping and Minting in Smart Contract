@@ -1,0 +1,17 @@
+pragma solidity ^0.7.5;
+
+contract FarzanCoin {
+    address public minter;
+
+       mapping (address => uint) public CheckAmount;
+
+    constructor () {
+        minter = msg.sender;
+    }
+
+    function mint (address reciever, uint amount) public {
+        CheckAmount [reciever] = amount;
+    }
+
+ 
+}

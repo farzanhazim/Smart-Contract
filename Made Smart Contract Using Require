@@ -1,0 +1,21 @@
+pragma solidity ^0.8.14;
+
+contract Bank {
+    mapping (address => uint) UserBalance;
+
+    function Deposit (uint _toAdd) public returns (uint){
+        UserBalance [msg.sender] += _toAdd;
+        return UserBalance[msg.sender];
+    }
+
+    function GetBalance () public view returns (uint) {
+        return UserBalance[msg.sender];
+    }
+
+    function Transfer (address recipient, uint Amount) public {
+        require (UserBalance[msg.sender] >= Amount, "Insufficient Balance");
+        require (msg.sender != recipient, "Transaction Error Because address is same!");
+        UserBalance [msg.sender] -= Amount;
+        UserBalance [recipient] += Amount;
+    }
+}

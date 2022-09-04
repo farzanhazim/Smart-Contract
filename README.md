@@ -1,3 +1,3 @@
-# First-Smart-Contract
+# Smart-Contract
 Practice for making smart Contracts
 Learning Continued!

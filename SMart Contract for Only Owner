@@ -1,0 +1,14 @@
+pragma solidity ^0.8.7;
+
+contract Ownable {
+
+    address public Owner;
+
+    constructor () {
+        Owner = msg.sender;
+    }
+
+    modifier OnlyOwner{
+        require (Owner == msg.sender,"Only Owner Can Have Access This Function.");
+        _;
+    }

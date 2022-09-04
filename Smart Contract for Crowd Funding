@@ -1,0 +1,76 @@
+pragma solidity ^0.8.7;
+
+contract CrownFunding {
+    mapping (address => uint) public Contributors;
+    address public Manager;
+    uint public MinimumContribution;
+    uint public Deadline;
+    uint public Target;
+    uint public RaisedAmount;
+    uint public NoOfContributors;
+
+    struct Request {
+        string Description;
+        address payable Receipent;
+        uint Value;
+        bool Completed;
+        uint NoOfVoters;
+        mapping (address => bool) Voters;
+    }
+
+    mapping (uint => Request) public Requests;
+    uint public NumRequests;
+
+    constructor (uint _target, uint _deadline) {
+        Target = _target;
+        Deadline = block.timestamp + _deadline;
+        MinimumContribution = 100 wei;
+        Manager = msg.sender;
+    }
+
+    function SendEth () public payable {
+        require (block.timestamp < Deadline,"DeadLine Has Past.");
+        require (msg.value >= MinimumContribution,"Minimun Contribution Is Not Met.");
+        if (Contributors[msg.sender] == 0) {
+            NoOfContributors ++;
+        }
+        Contributors[msg.sender] += msg.value;
+        RaisedAmount += msg.value;
+    }
+
+    function GetContractBalance () public view returns (uint) {
+        return address(this).balance;
+    }
+
+    function Refund () public {
+        require (block.timestamp > Deadline && RaisedAmount < Target,"Your Rae Not Eligible To Refund The Funds.");
+        require (Contributors[msg.sender] > 0,"");
+        address payable user = payable (msg.sender);
+        user.transfer(Contributors[msg.sender]);
+        Contributors[msg.sender] = 0;
+    }
+
+    modifier OnlyManager{
+        require (msg.sender == Manager,"");
+        _;
+    }
+
+    function CreateRequest (string memory _description,address payable _receipent, uint _value ) public OnlyManager {
+        Request storage NewRequest = Requests[NumRequests];
+        NumRequests ++;
+        NewRequest.Description = _description;
+        NewRequest.Receipent = _receipent;
+        NewRequest.Value = _value;
+        NewRequest.Completed = false;
+        NewRequest.NoOfVoters = 0;
+    }
+
+    function VoteRequest (uint _requestNo) public {
+        require (Contributors[msg.sender] > 0,"You Must Be A Contributor.");
+        Request storage thisRequest = Requests[_requestNo];
+        require (thisRequest.Voters[msg.sender] == false,"You Have Already Voted.");
+        thisRequest.Voters[msg.sender] = true;
+        thisRequest.NoOfVoters ++;
+
+    }
+}

@@ -1,0 +1,56 @@
+pragma solidity ^0.8.7;
+
+import "./Ownable.sol";
+import "./Kill.sol";
+
+contract MyBank is Ownable, Kill {
+
+    mapping (address => uint) Balance;
+
+    function Deposite () public payable returns (uint) {
+        Balance[msg.sender] += msg.value;
+        return Balance[msg.sender];
+    }
+
+    function Withdraw (address receiver, uint amount) public returns (uint) {
+        
+        require (Balance[msg.sender] >= amount,"Your Withdrawal Amount Must Be Less Than Your Balance");
+        require (Balance[msg.sender] != 0,"Your Withdrawal Amount Must Be Greater Than 0.");
+        require (msg.sender != receiver,"");
+
+        payable(msg.sender).transfer(amount);
+
+        uint OldBalance = Balance[msg.sender];
+
+        Balance[msg.sender] -= amount;
+        Balance[receiver] += amount;
+
+        assert (Balance[msg.sender] == OldBalance - amount);
+        
+        return Balance[msg.sender];
+    }
+
+    function ContractBalance () public OnlyOwner view  returns (uint) {
+       return address(this).balance;
+    }
+
+    function CheckBalance () public view returns (uint) {
+        return Balance[msg.sender];
+    }
+
+    function Transfer (address receipent, uint _amount) public {
+
+        require (Balance[msg.sender] >= _amount,"Your Transfer Amount Must Be Less Than Your Balance");
+        require (msg.sender != receipent,"");
+        require (Balance[msg.sender] != 0,"Your Transfer Amount Must Be Greater Than 0.");
+
+        uint PreviousBalance = Balance[msg.sender];
+
+        Balance[msg.sender] -= _amount;
+        Balance[receipent] += _amount;
+
+        assert (Balance[msg.sender] == PreviousBalance - _amount);
+
+    }
+
+}

@@ -1,0 +1,41 @@
+pragma solidity ^0.8.7;
+
+contract Lottery{
+
+    address public Manager;
+    address payable[] public Participants;
+
+      modifier OnlyManager {
+        require (Manager == msg.sender);
+        _;
+    }
+
+    constructor () {
+        Manager = msg.sender;
+    }
+
+    receive() external payable {
+        require (msg.value == 1 ether);
+        Participants.push(payable(msg.sender));
+    }
+
+    function LotteryBalance () public view OnlyManager returns (uint) {
+        return address(this).balance;
+    }
+
+    function Random () public view returns (uint) {
+       return uint (keccak256(abi.encodePacked(block.difficulty,block.timestamp,Participants.length)));  
+    }
+
+    function SelectWinner () public OnlyManager  {
+        require (Participants.length >= 3);
+
+        uint r = Random();
+        address payable winner;
+        uint index = r % Participants.length;
+        winner = Participants[index];
+        winner.transfer(LotteryBalance());
+        Participants = new address payable [] (0);
+    }
+
+}

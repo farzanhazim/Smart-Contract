@@ -1,0 +1,21 @@
+pragma solidity ^0.8.7;
+
+contract IfElse{
+
+    function Check (int _x) public pure returns (string memory) {
+        
+        string memory value;
+        
+        if (_x > 0){
+            value = "Your number is greater than 0";
+        }
+        else if (_x == 0){
+            value = "Your number is equlas to 0";
+        }
+        else {
+            value = "Your number is less than 0";
+        }
+
+        return value;
+    }
+}

@@ -1,0 +1,21 @@
+pragma solidity ^0.8.7;
+
+contract RemovingAnyValueOfArray {
+
+    uint[] public Numbers;
+
+    function AddValues (uint _toAdd) public {
+        Numbers.push(_toAdd);
+    }
+
+    function Length () public view returns (uint) {
+        return Numbers.length;
+    }
+    
+    //Function to remove any index value from an array
+    
+    function Remove (uint _index) public {
+        Numbers[_index] = Numbers[Numbers.length -1];
+        Numbers.pop();
+    }
+}

@@ -1,0 +1,28 @@
+pragma solidity ^0.8.17;
+
+contract EtherWallet {
+
+    address payable public Owner;
+
+    event WithdrawSuccessfull( uint amount);
+
+    constructor () {
+        Owner = payable(msg.sender);
+    }
+
+    modifier OnlyOwner {
+        require (msg.sender == Owner,"You are not the owner.");
+        _;
+    }
+
+    receive () external payable {}
+
+    function Withdraw (uint amount) public {
+        payable(msg.sender).transfer(amount);
+        emit WithdrawSuccessfull (amount);
+    }
+
+    function getBalance () public view OnlyOwner returns (uint) {
+        return address(this).balance;
+    }
+}
